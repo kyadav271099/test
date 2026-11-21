@@ -1,0 +1,95 @@
+[workspace]
+resolver = "2"
+members = [
+    "core-types",
+    "core-net",
+    "engine-http",
+    "proto-aria2",
+    "proto-ed2k",
+    "proto-ytdlp",
+    "android-ffi",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["FerroDL Contributors"]
+license = "Apache-2.0"
+rust-version = "1.78"
+
+[workspace.dependencies]
+# Internal workspace crates
+core-types = { path = "core-types" }
+core-net = { path = "core-net" }
+engine-http = { path = "engine-http" }
+proto-aria2 = { path = "proto-aria2" }
+proto-ed2k = { path = "proto-ed2k" }
+proto-ytdlp = { path = "proto-ytdlp" }
+
+# Async runtime & cancellation
+tokio = { version = "1.40", features = [
+    "rt-multi-thread",
+    "macros",
+    "sync",
+    "time",
+    "net",
+    "io-util",
+    "fs",
+    "process",
+] }
+tokio-util = { version = "0.7", features = ["rt", "io"] }
+futures-util = "0.3"
+bytes = "1.7"
+async-trait = "0.1"
+
+# Pure-Rust HTTP/HTTPS + SOCKS5h stack (rustls only — zero OpenSSL dependency for Android NDK)
+reqwest = { version = "0.12", default-features = false, features = [
+    "rustls-tls",
+    "rustls-tls-webpki-roots",
+    "socks",
+    "stream",
+    "gzip",
+    "brotli",
+    "deflate",
+    "http2",
+    "json",
+] }
+url = { version = "2.5", features = ["serde"] }
+
+# Persistence (bundled SQLite amalgamation compiled directly with NDK clang)
+rusqlite = { version = "0.32", features = ["bundled"] }
+
+# Hashing & encoding (ed2k MD4 chunk verification, aria2 torrent base64)
+md-4 = "0.10"
+hex = "0.4"
+base64 = "0.22"
+
+# Serialization, errors, identifiers, time, logging
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+tracing = "0.1"
+uuid = { version = "1.10", features = ["v4", "serde"] }
+chrono = { version = "0.4", default-features = false, features = ["clock", "serde"] }
+libc = "0.2"
+
+# FFI bindings for Android Kotlin
+uniffi = "0.28"
+
+# Testing
+tempfile = "3.13"
+
+[workspace.metadata.cargo-ndk]
+min-sdk-version = 24
+targets = [
+    "aarch64-linux-android",
+    "armv7-linux-androideabi",
+]
+output-dir = "../app/src/main/jniLibs"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
