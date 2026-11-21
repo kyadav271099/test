@@ -1,0 +1,8 @@
+{
+  "name": "FerroDL",
+  "description": "High-speed Android Download Manager powered by a Rust core engine (Tokio, rustls, SQLite) with 4/8/16-part segmented downloads, global Tor/Orbot fail-closed routing, yt-dlp, aria2, and ed2k support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
